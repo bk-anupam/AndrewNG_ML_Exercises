@@ -20,7 +20,18 @@ def gradient_descent(X, y, theta, alpha, no_iters, m):
         err = h - y
         theta_err = alpha * (np.dot(np.transpose(X), err) / m)
         theta = theta - theta_err
+    plot_cost_vs_iteration(J_history, no_iters)
     return theta
+
+
+def plot_cost_vs_iteration(J_history, no_iters):
+    iter_arr = np.arange(1, 1501).reshape(1500,1)
+    fig, ax_costiter = plt.subplots()
+    ax_costiter.plot(iter_arr, J_history, color='green')
+    plt.xlabel('No of iterations')
+    plt.ylabel('Cost')
+    plt.title('Cost vs No of iterations')
+    plt.show()
 
 
 def load_data():
@@ -33,17 +44,21 @@ def load_data():
 
 def initial_plotting(inputDF):
     # do an EDA by plotting the data
-    inputDF.plot(kind='scatter', x='Population', y='Profit')
+    fig, ax_scatter = plt.subplots()
+    x = inputDF.iloc[:, 0]
+    y = inputDF.iloc[:, 1]
+    ax_scatter.scatter(x, y)
     plt.xlabel('Population of city in 10,000s')
     plt.ylabel('Profit in $10,000s')
     plt.title("Profit vs Population")
     plt.show()
+    return fig, ax_scatter
 
 
-def line_fit_plot(inputDF, X, result_theta):
+def line_fit_plot(init_axes, X, result_theta):
     predictedY = np.dot(X, result_theta)
     population = X[:, 1]
-    plt.plot(population, predictedY, color='red')
+    init_axes.plot(population, predictedY, color='red')
     plt.show()
 
 
@@ -88,9 +103,8 @@ def test_3dplot():
     plt.show()
 
 def run_linear_regression():
-    test_3dplot()
     inputDF = load_data()
-    initial_plotting(inputDF)
+    init_fig, init_axes = initial_plotting(inputDF)
     # the feature matrix X
     X = inputDF.iloc[:, 0:1].values
     one_vector = np.ones(len(X)).reshape(len(X), 1)
@@ -111,7 +125,7 @@ def run_linear_regression():
     print('Running gradient descent on training dataset')
     result_theta = gradient_descent(X, y, theta, alpha, no_iters, m)
     print(result_theta)
-    line_fit_plot(inputDF, X, result_theta)
+    line_fit_plot(init_axes, X, result_theta)
     population1 = np.array([[1, 3.5]])
     prediction1 = np.dot(population1, result_theta)
     print("For population of 35000 the predicted profit is: {}".format(prediction1))
