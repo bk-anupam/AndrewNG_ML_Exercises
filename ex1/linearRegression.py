@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import os
 import matplotlib.pyplot as plt
+import regressionBase as base
+import sys
 from mpl_toolkits import mplot3d
 
 
@@ -32,27 +34,6 @@ def plot_cost_vs_iteration(J_history, no_iters):
     plt.ylabel('Cost')
     plt.title('Cost vs No of iterations')
     plt.show()
-
-
-def load_data():
-    current_dir = os.getcwd()
-    os.chdir(r'D:\Anupam_Technical\Coursera\Anupam_ANG_ML\AndrewNG_ML_Exercises\ex1\data')
-    print(current_dir)
-    inputDF = pd.read_csv('ex1data1.txt', sep=',', header=None, names=['Population','Profit'])
-    return inputDF
-
-
-def initial_plotting(inputDF):
-    # do an EDA by plotting the data
-    fig, ax_scatter = plt.subplots()
-    x = inputDF.iloc[:, 0]
-    y = inputDF.iloc[:, 1]
-    ax_scatter.scatter(x, y)
-    plt.xlabel('Population of city in 10,000s')
-    plt.ylabel('Profit in $10,000s')
-    plt.title("Profit vs Population")
-    plt.show()
-    return fig, ax_scatter
 
 
 def line_fit_plot(init_axes, X, result_theta):
@@ -102,9 +83,10 @@ def test_3dplot():
     ax.set_zlabel('z')
     plt.show()
 
-def run_linear_regression():
-    inputDF = load_data()
-    init_fig, init_axes = initial_plotting(inputDF)
+def run_linear_regression(input_filename):
+    file_path = "./data/" + input_filename
+    inputDF = base.load_data(file_path)
+    base.scatter_plot(inputDF)
     # the feature matrix X
     X = inputDF.iloc[:, 0:1].values
     one_vector = np.ones(len(X)).reshape(len(X), 1)
@@ -125,7 +107,8 @@ def run_linear_regression():
     print('Running gradient descent on training dataset')
     result_theta = gradient_descent(X, y, theta, alpha, no_iters, m)
     print(result_theta)
-    line_fit_plot(init_axes, X, result_theta)
+    fig_fit, ax_fit = base.scatter_plot(inputDF)
+    line_fit_plot(ax_fit, X, result_theta)
     population1 = np.array([[1, 3.5]])
     prediction1 = np.dot(population1, result_theta)
     print("For population of 35000 the predicted profit is: {}".format(prediction1))
@@ -133,4 +116,5 @@ def run_linear_regression():
 
 
 if __name__ == "__main__":
-    run_linear_regression()
+    file_name = sys.argv[1]
+    run_linear_regression(file_name)
