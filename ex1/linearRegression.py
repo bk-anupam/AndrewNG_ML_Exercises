@@ -4,20 +4,9 @@ import numpy as np
 import regressionBase as base
 from mpl_toolkits import mplot3d
 
-def gradient_descent(X, y, theta, alpha, no_iters, m):
-    J_history = np.zeros((no_iters, 1))
-    for iteration in range(no_iters):
-        J_history[iteration] = base.compute_cost(X, theta, y, m)
-        h = np.dot(X, theta)
-        err = h - y
-        theta_err = alpha * (np.dot(np.transpose(X), err) / m)
-        theta = theta - theta_err
-    plot_cost_vs_iteration(J_history, no_iters)
-    return theta
-
 
 def plot_cost_vs_iteration(J_history, no_iters):
-    iter_arr = np.arange(1, 1501).reshape(1500,1)
+    iter_arr = np.arange(1, no_iters+1).reshape(no_iters, 1)
     fig, ax_costiter = plt.subplots()
     ax_costiter.plot(iter_arr, J_history, color='green')
     plt.xlabel('No of iterations')
@@ -94,8 +83,9 @@ def run_linear_regression(input_filename):
     alpha = 0.01
     no_iters = 1500
     print('Running gradient descent on training dataset')
-    result_theta = gradient_descent(X, y, theta, alpha, no_iters, m)
+    result_theta, cost_history = base.gradient_descent(X, y, theta, alpha, no_iters, m)
     print(result_theta)
+    plot_cost_vs_iteration(cost_history, no_iters)
     fig_fit, ax_fit = base.scatter_plot(inputDF)
     line_fit_plot(ax_fit, X, result_theta)
     population1 = np.array([[1, 3.5]])

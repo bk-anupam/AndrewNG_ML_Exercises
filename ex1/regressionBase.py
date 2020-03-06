@@ -24,6 +24,17 @@ def add_one_vector(X):
     return np.concatenate((one_vector, X), axis=1)
 
 
+def gradient_descent(X, y, theta, alpha, no_iters, m):
+    J_history = np.zeros((no_iters, 1))
+    for iteration in range(no_iters):
+        J_history[iteration] = compute_cost(X, theta, y, m)
+        h = np.dot(X, theta)
+        err = h - y
+        theta_err = alpha * (np.dot(np.transpose(X), err) / m)
+        theta = theta - theta_err
+    return theta, J_history
+
+
 def scatter_plot(inputDF):
     # do an EDA by plotting the data
     fig, ax_scatter = plt.subplots()
