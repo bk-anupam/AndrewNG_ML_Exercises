@@ -8,6 +8,22 @@ def load_data(file_path):
     return input_df
 
 
+def load_data_multi(file_path):
+    return pd.read_csv(file_path, sep=',', header=None, names=['Size', 'NoOfBedrooms', 'Price'])
+
+
+# the vectorized cost function
+def compute_cost(X, theta, y, m):
+    J = 0
+    J = np.dot(np.transpose((np.dot(X, theta) - y)), (np.dot(X, theta) - y))
+    return J[0][0] / (2 * m)
+
+
+def add_one_vector(X):
+    one_vector = np.ones(len(X)).reshape(len(X), 1)
+    return np.concatenate((one_vector, X), axis=1)
+
+
 def scatter_plot(inputDF):
     # do an EDA by plotting the data
     fig, ax_scatter = plt.subplots()

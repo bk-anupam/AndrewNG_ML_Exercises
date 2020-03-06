@@ -1,23 +1,13 @@
-import pandas as pd
-import numpy as np
-import os
-import matplotlib.pyplot as plt
-import regressionBase as base
 import sys
+import matplotlib.pyplot as plt
+import numpy as np
+import regressionBase as base
 from mpl_toolkits import mplot3d
-
-
-# the vectorized cost function
-def compute_cost(X, theta, y, m):
-    J = 0
-    J = np.dot(np.transpose((np.dot(X, theta) - y)), (np.dot(X, theta) - y))
-    return J[0][0] / (2 * m)
-
 
 def gradient_descent(X, y, theta, alpha, no_iters, m):
     J_history = np.zeros((no_iters, 1))
     for iteration in range(no_iters):
-        J_history[iteration] = compute_cost(X, theta, y, m)
+        J_history[iteration] = base.compute_cost(X, theta, y, m)
         h = np.dot(X, theta)
         err = h - y
         theta_err = alpha * (np.dot(np.transpose(X), err) / m)
@@ -52,7 +42,7 @@ def costfunction_3d_plot(X, y, m):
         for j in range(len(theta1_vals)):
             temp_theta = np.array([theta0_vals[i], theta1_vals[j]])
             #temp_theta = np.array([t0[i][j], t1[i][j]])
-            J_vals[i, j] = compute_cost(X, temp_theta, y, m)
+            J_vals[i, j] = base.compute_cost(X, temp_theta, y, m)
     J_vals = J_vals.T
 
     fig = plt.figure()
@@ -89,17 +79,16 @@ def run_linear_regression(input_filename):
     base.scatter_plot(inputDF)
     # the feature matrix X
     X = inputDF.iloc[:, 0:1].values
-    one_vector = np.ones(len(X)).reshape(len(X), 1)
-    X = np.concatenate((one_vector, X), axis=1)
+    X = base.add_one_vector(X)
     # the vector y
     y = inputDF.iloc[:, 1:2].values
     m = len(X)
     # now initialize theta with all zeros
     theta = np.zeros(2).reshape(2, 1)
-    initial_cost = compute_cost(X, theta, y, m)
+    initial_cost = base.compute_cost(X, theta, y, m)
     print("cost with theta values set to {} : {}".format(theta, initial_cost))
     theta2 = np.array([[-1], [2]])
-    initial_cost2 = compute_cost(X, theta2, y, m)
+    initial_cost2 = base.compute_cost(X, theta2, y, m)
     print("cost with theta values set to {} : {}".format(theta2, initial_cost2))
     # initialize the learning rate and no of iterations for gradient descent
     alpha = 0.01
