@@ -5,16 +5,6 @@ import regressionBase as base
 from mpl_toolkits import mplot3d
 
 
-def plot_cost_vs_iteration(J_history, no_iters):
-    iter_arr = np.arange(1, no_iters+1).reshape(no_iters, 1)
-    fig, ax_costiter = plt.subplots()
-    ax_costiter.plot(iter_arr, J_history, color='green')
-    plt.xlabel('No of iterations')
-    plt.ylabel('Cost')
-    plt.title('Cost vs No of iterations')
-    plt.show()
-
-
 def line_fit_plot(init_axes, X, result_theta):
     predictedY = np.dot(X, result_theta)
     population = X[:, 1]
@@ -33,7 +23,6 @@ def costfunction_3d_plot(X, y, m):
             #temp_theta = np.array([t0[i][j], t1[i][j]])
             J_vals[i, j] = base.compute_cost(X, temp_theta, y, m)
     J_vals = J_vals.T
-
     fig = plt.figure()
     ax = fig.add_subplot(121, projection='3d')
     ax.plot_surface(theta0_vals, theta1_vals, J_vals, cmap='viridis')
@@ -62,6 +51,7 @@ def test_3dplot():
     ax.set_zlabel('z')
     plt.show()
 
+
 def run_linear_regression(input_filename):
     file_path = "./data/" + input_filename
     inputDF = base.load_data(file_path)
@@ -73,7 +63,7 @@ def run_linear_regression(input_filename):
     y = inputDF.iloc[:, 1:2].values
     m = len(X)
     # now initialize theta with all zeros
-    theta = np.zeros(2).reshape(2, 1)
+    theta = np.zeros((X.shape[1], 1))
     initial_cost = base.compute_cost(X, theta, y, m)
     print("cost with theta values set to {} : {}".format(theta, initial_cost))
     theta2 = np.array([[-1], [2]])
@@ -85,7 +75,7 @@ def run_linear_regression(input_filename):
     print('Running gradient descent on training dataset')
     result_theta, cost_history = base.gradient_descent(X, y, theta, alpha, no_iters, m)
     print(result_theta)
-    plot_cost_vs_iteration(cost_history, no_iters)
+    base.plot_cost_vs_iteration(cost_history, no_iters)
     fig_fit, ax_fit = base.scatter_plot(inputDF)
     line_fit_plot(ax_fit, X, result_theta)
     population1 = np.array([[1, 3.5]])

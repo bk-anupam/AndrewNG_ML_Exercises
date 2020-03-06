@@ -35,6 +35,16 @@ def gradient_descent(X, y, theta, alpha, no_iters, m):
     return theta, J_history
 
 
+def plot_cost_vs_iteration(J_history, no_iters):
+    iter_arr = np.arange(1, no_iters+1).reshape(no_iters, 1)
+    fig, ax_costiter = plt.subplots()
+    ax_costiter.plot(iter_arr, J_history, color='green')
+    plt.xlabel('No of iterations')
+    plt.ylabel('Cost')
+    plt.title('Cost vs No of iterations')
+    plt.show()
+
+
 def scatter_plot(inputDF):
     # do an EDA by plotting the data
     fig, ax_scatter = plt.subplots()
