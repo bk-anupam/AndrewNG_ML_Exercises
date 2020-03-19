@@ -20,6 +20,12 @@ def normalize_features(X):
     return X
 
 
+def normal_equation(X, y):
+    Xt = np.transpose(X)
+    XtX_inv = np.linalg.pinv(np.dot(Xt, X))
+    return np.dot(XtX_inv, np.dot(Xt, y))
+
+
 def run_regression_multi(filename):
     file_path = "./data/" + filename
     # Load the input data as dataframe and change the type of all columns to float from int
@@ -30,7 +36,7 @@ def run_regression_multi(filename):
     X = base.add_one_vector(X)
     # initialize theta, learning rate alpha and no of iterations
     theta = np.zeros((X.shape[1], 1))
-    alpha = 0.01
+    alpha = 0.1
     num_iters = 400
     theta, J_history = base.gradient_descent(X, y, theta, alpha, num_iters, m)
     base.plot_cost_vs_iteration(J_history, num_iters)
@@ -39,7 +45,8 @@ def run_regression_multi(filename):
                        (3 - np.mean(input_features[:, 1]))/np.std(input_features[:, 1])]])
     predicted_price = np.dot(house, theta)
     print("Predicted price of house of size 1650 sqft with 3 bedrooms is {}$".format(predicted_price[0][0]))
-    print('Finished')
+    theta_normeq = normal_equation(X, y)
+    print("Theta calculated by normal equation method: {}".format(theta_normeq))
 
 
 if __name__ == "__main__":
