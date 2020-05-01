@@ -20,7 +20,6 @@ def plot_raw_data(X, y):
     plt.xlabel('Exam 1 score')
     plt.ylabel('Exam 2 score')
     plt.title('Scatter plot of training data')
-    plt.legend()
     plt.show()
 
 
@@ -43,6 +42,14 @@ def predict(theta, X):
     classifier = lambda item: 1 if item > 0 else 0
     v_classifier = np.vectorize(classifier)
     return v_classifier(product)
+
+
+def plot_decision_boundary(theta, X, y):
+    plot_x = np.array([np.min(X[:, 1]), np.max(X[:, 1])])
+    plot_y = -1 / theta[2] * (theta[1] * plot_x + theta[0])
+    plt.plot(plot_x, plot_y, label='decision boundary')
+    plt.legend()
+    plt.show()
 
 
 print(os.getcwd())
@@ -83,4 +90,6 @@ predictions = predict(optimized_theta, X)
 is_correct = predictions == y1d
 accuracy = len(predictions[is_correct]) / len(is_correct)
 print('Accuracy of predictions: {}'.format(round(accuracy, 2)))
+
+plot_decision_boundary(optimized_theta, X, y)
 print('plotted')
