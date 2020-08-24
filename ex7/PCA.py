@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import os
 import scipy.io as sio
 from sklearn.preprocessing import StandardScaler
+from PIL import Image
 
 
 def plot_data1(X):
@@ -75,4 +76,31 @@ ax2.plot(X_reconstructed[:, 0], X_reconstructed[:, 1], 'ro', mec='r', mew=2, mfc
 # draw dotted lines from each reconstructed data point to corresponding original data point
 for i in range(len(X_reconstructed)):
     ax2.plot([X_scaled[i, 0], X_reconstructed[i, 0]], [X_scaled[i, 1], X_reconstructed[i, 1]], '--k')
+
+
+########## Problem Set 3 (Image compression) #############
+def plot_images(X_image, num_images, title):
+    num_images_x = int(np.sqrt(num_images))
+    fig3, ax_array = plt.subplots(num_images_x, num_images_x, figsize=(8, 8))
+    for i, ax in enumerate(ax_array.flat):
+        image = X_image[i, :]
+        num_rows = num_cols = int(np.sqrt(len(image)))
+        ax.imshow(image.reshape(num_rows, num_cols, order='F'), cmap='gray')
+        fig3.suptitle(title)
+        ax.axis('off')
+
+
+data2 = sio.loadmat('./data/ex7faces.mat')
+X_image = data2['X']
+num_images = 100
+# plot the original images
+plot_images(X_image, num_images, 'Original face images')
+# peform PCA to represent each images using 100 principal components ( pixels or features ) instead to 1024
+# we will use sci-kit learn for extracting the principal components
+from sklearn.decomposition import PCA
+scaler = StandardScaler()
+X_image_scaled = scaler.fit_transform(X_image)
+pca = PCA(n_components=100)
+X_image_reduced = pca.fit_transform(X_image_scaled)
+plot_images(X_image_reduced, num_images, 'Compressed face images')
 print('test')
