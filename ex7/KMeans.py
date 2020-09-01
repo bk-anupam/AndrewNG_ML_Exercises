@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import scipy.io as sio
-from matplotlib.animation import FuncAnimation
+import ex7.KMeansBase as base
 
 
 def find_closest_centroids(X_df, initial_centroids):
@@ -62,8 +62,12 @@ X_df = pd.DataFrame(X, columns=['x1','x2'])
 K = 3
 colors = ['red', 'green', 'blue']
 cluster_names_colors = [('K_' + str(i+1), colors[i]) for i in range(K)]
-initial_centroids = np.array([[3, 3], [6, 2], [8, 5]])
-run_kmeans(X_df, initial_centroids, 10)
+#initial_centroids = np.array([[3, 3], [6, 2], [8, 5]])
+# select 3 data points randomly from the dataset and take them to be the initial centroids. See what effect
+# this random selection of centroids has on clustering.
+random_indices = np.random.choice(X.shape[0], size=3)
+random_initial_centroids = X[random_indices, :]
+run_kmeans(X_df, random_initial_centroids, 10)
 #find_closest_centroids(X_df, initial_centroids)
 #print(X_df['cluster'][0:3])
 #new_centroids = compute_centroids(X_df, cluster_names_colors)
